@@ -98,11 +98,30 @@ public class ClassSerializationDeserializationApplication {
 				.build());
 		demoEntityRepo.findAll()
 				.stream().peek(demoEntity -> {
-					System.out.println("demoEntity.getSimpleDtoJson() = " + demoEntity.getSimpleDtoJson());
+					System.out.println("SERIALIZATION - JSON = " + demoEntity.getSimpleDtoJson());
+                    System.out.println("DESERIALIZATION - CLASS = " + demoEntity.getSimpleDto());
+                    System.out.println("DESERIALIZATION - INTERFACE = " + demoEntity.getSimpleDto().getContactInfo());
 				})
 				.forEach(demoEntity -> System.out.println("demoEntity = " + demoEntity));
     }
 }
+
+/** Output:
+ *
+ simple json = {"name":"hari","address":{"street":"MR","city":"BR","zipCode":"560037"},"contactInfo":{"type":"basic","email":"@gmail","phoneNumber":"1244","address":"address 123","department":{"type":"basic","departmentName":"CAR","location":"location 123"}}}
+ json2 = {"name":"hari","address":{"street":"MR","city":"BR","zipCode":"560037"},"contactInfo":{"type":"detailed","email":"@gmail","phoneNumber":"12312312","address":"addr 234","additionalInfo":"extra details","department":{"type":"detailed","departmentName":"dep name skoda","numberOfEmployees":50}}}
+ jsonToClass = SimpleDto(name=hari, address=Address(street=MR, city=BR, zipCode=560037), contactInfo=BasicContactInfo(email=@gmail, phoneNumber=1244, address=address 123, department=BasicDepartment(departmentName=CAR, location=location 123)))
+ json2ToClass = SimpleDto(name=hari, address=Address(street=MR, city=BR, zipCode=560037), contactInfo=DetailedContactInfo(email=@gmail, phoneNumber=12312312, address=addr 234, additionalInfo=extra details, department=DetailedDepartment(departmentName=dep name skoda, numberOfEmployees=50)))
+ SERIALIZATION - JSON = {"name":"hari","address":{"street":"MR","city":"BR","zipCode":"560037"},"contactInfo":{"type":"basic","email":"@gmail","phoneNumber":"1244","address":"address 123","department":{"type":"basic","departmentName":"CAR","location":"location 123"}}}
+ DESERIALIZATION - CLASS = SimpleDto(name=hari, address=Address(street=MR, city=BR, zipCode=560037), contactInfo=BasicContactInfo(email=@gmail, phoneNumber=1244, address=address 123, department=BasicDepartment(departmentName=CAR, location=location 123)))
+ DESERIALIZATION - INTERFACE = BasicContactInfo(email=@gmail, phoneNumber=1244, address=address 123, department=BasicDepartment(departmentName=CAR, location=location 123))
+ demoEntity = DemoEntity(id=1, name=entity 1, simpleDtoJson={"name":"hari","address":{"street":"MR","city":"BR","zipCode":"560037"},"contactInfo":{"type":"basic","email":"@gmail","phoneNumber":"1244","address":"address 123","department":{"type":"basic","departmentName":"CAR","location":"location 123"}}}, simpleDto=SimpleDto(name=hari, address=Address(street=MR, city=BR, zipCode=560037), contactInfo=BasicContactInfo(email=@gmail, phoneNumber=1244, address=address 123, department=BasicDepartment(departmentName=CAR, location=location 123))))
+ SERIALIZATION - JSON = {"name":"hari","address":{"street":"MR","city":"BR","zipCode":"560037"},"contactInfo":{"type":"detailed","email":"@gmail","phoneNumber":"12312312","address":"addr 234","additionalInfo":"extra details","department":{"type":"detailed","departmentName":"dep name skoda","numberOfEmployees":50}}}
+ DESERIALIZATION - CLASS = SimpleDto(name=hari, address=Address(street=MR, city=BR, zipCode=560037), contactInfo=DetailedContactInfo(email=@gmail, phoneNumber=12312312, address=addr 234, additionalInfo=extra details, department=DetailedDepartment(departmentName=dep name skoda, numberOfEmployees=50)))
+ DESERIALIZATION - INTERFACE = DetailedContactInfo(email=@gmail, phoneNumber=12312312, address=addr 234, additionalInfo=extra details, department=DetailedDepartment(departmentName=dep name skoda, numberOfEmployees=50))
+ demoEntity = DemoEntity(id=2, name=entity 2, simpleDtoJson={"name":"hari","address":{"street":"MR","city":"BR","zipCode":"560037"},"contactInfo":{"type":"detailed","email":"@gmail","phoneNumber":"12312312","address":"addr 234","additionalInfo":"extra details","department":{"type":"detailed","departmentName":"dep name skoda","numberOfEmployees":50}}}, simpleDto=SimpleDto(name=hari, address=Address(street=MR, city=BR, zipCode=560037), contactInfo=DetailedContactInfo(email=@gmail, phoneNumber=12312312, address=addr 234, additionalInfo=extra details, department=DetailedDepartment(departmentName=dep name skoda, numberOfEmployees=50))))
+
+ */
 
 @ToString
 @Getter
