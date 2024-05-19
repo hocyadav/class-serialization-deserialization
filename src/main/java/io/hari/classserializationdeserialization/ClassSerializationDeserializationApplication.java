@@ -249,26 +249,49 @@ class DemoEntity {
 
 	String name;
 
-	@Column(name = "json", columnDefinition = "TEXT")
+	@Column(name = "dto_json", columnDefinition = "TEXT")
+//	@Column(name = "dto_json", columnDefinition = "JSON") // not working : Caused by: java.lang.NullPointerException: Cannot invoke "io.hari.classserializationdeserialization.SimpleDto.getContactInfo()" because the return value of "io.hari.classserializationdeserialization.DemoEntity.getSimpleDto()" is null
 	String simpleDtoJson;
 
 	@Transient
 	SimpleDto simpleDto;
 
+//	@PrePersist
+//	@PreUpdate
+//	public void serializeDtoClass_classToJson(){
+//		try {
+//            this.simpleDtoJson = new ObjectMapper().writeValueAsString(this.simpleDto);
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//		}
+//	}
+//	@PostLoad
+//	public void deserializeDtoClass_jsonToClass(){
+//		try {
+//			ObjectMapper objectMapper = new ObjectMapper();
+//			this.simpleDto = objectMapper.readValue(this.simpleDtoJson, SimpleDto.class);
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//		}
+//	}
 	@PrePersist
 	@PreUpdate
-	public void serializeDtoClass_classToJson(){
+	public void serializeDtoClass_classToJson() {
 		try {
-            this.simpleDtoJson = new ObjectMapper().writeValueAsString(this.simpleDto);
+			if (this.simpleDto != null) {  // Check if simpleDto is not null
+				this.simpleDtoJson = new ObjectMapper().writeValueAsString(this.simpleDto);
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
+
 	@PostLoad
-	public void deserializeDtoClass_jsonToClass(){
+	public void deserializeDtoClass_jsonToClass() {
 		try {
-			ObjectMapper objectMapper = new ObjectMapper();
-			this.simpleDto = objectMapper.readValue(this.simpleDtoJson, SimpleDto.class);
+			if (this.simpleDtoJson != null && !this.simpleDtoJson.isEmpty()) {  // Check if simpleDtoJson is not null or empty
+				this.simpleDto = new ObjectMapper().readValue(this.simpleDtoJson, SimpleDto.class);
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
